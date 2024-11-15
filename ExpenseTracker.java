@@ -64,7 +64,7 @@ class Interface{
                     break;
                 
                 case 2:
-                    //viewExpenses();  
+                    viewExpenses();  
                     break;
                 
                 case 3:
@@ -87,8 +87,10 @@ class Interface{
                     System.out.println("Invalid Statement");
             }
         }
-    }  
+    }
 
+    
+    // 1. Add Expense
    public void addExpense() {
         System.out.print("Transaction category (Food, Transportation, Tuition, etc...): ");
         String category = input.nextLine();
@@ -118,7 +120,28 @@ class Interface{
 
         System.out.println("Expense added successfully!");
     }
-
+    // 2. View Expenses
+    public void viewExpenses()  {
+        if (recentTransactions.isEmpty()) {
+            System.out.println("No recent transactions found.");
+            return;
+        }
+        else {
+        System.out.println("Recent Transactions:");
+        for (int i = 0; i < recentTransactions.stack.size(); i++) {
+            ExpenseInformation expense = recentTransactions.stack.getValue(i);
+            System.out.println("Expense " + (i + 1) + ":");
+            System.out.println("Category: " + expense.category);
+            System.out.println("Merchant: " + expense.merchant);
+            System.out.println("Amount: " + expense.amount);
+            System.out.println("Date: " + expense.date);
+            System.out.println("Payment Method: " + expense.paymentMethod);
+            System.out.println("Description: " + expense.description);
+            System.out.println("-------------------------------");
+            }
+        }
+    }
+    // 4. Undo last entry
     public void undoLastAction(){
         recentTransactions.pop();
         System.out.println("Last transaction removed!");
@@ -231,6 +254,17 @@ class LinkedList { // For other necessary data structures.
             index++;
         }
     }
+
+    int size() {
+        int count = 0;
+        Node current = head;
+        while (current != null) {
+            count++;
+            current = current.next;
+        }
+        return count;
+    }
+    
 }
 
 class Node { // For linked list data structure.
