@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 class ExpenseTracker{
     public static void main(String[] args){
-        Interface CLI = new Interface();
+       Interface CLI = new Interface();
 
         CLI.mainMenu();
 
@@ -17,18 +17,33 @@ class Utility{ //Reserved for export, and basic algorithms.
     public Utility(){}
 
     //To be implemented - CSV file output
-    public void exportToCSV(List<ExpenseInformation> expenses) {
+    public void exportToCSV(List<ExpenseInformation> expenses, Stack recentTransactions) {
+        double totalAmount = 0;
+
+    // Get all transaction amounts and calculate total
+    for (int i = 0; i < recentTransactions.stack.size(); i++) {
+        ExpenseInformation expense = recentTransactions.stack.getValue(i);
+        expenses.add(expense);
+        totalAmount += expense.amount;
+    }
+
         try (PrintWriter writer = new PrintWriter(new File("CC13---ExpenseTracker/ExpenseInformation.csv"))) {
             StringBuilder sb = new StringBuilder();
             sb.append("Category,Merchant,Amount,Date,PaymentMethod,Description\n");
 
-            for (ExpenseInformation expense : expenses) {
-                sb.append(expense.category).append(",");
-                sb.append(expense.merchant).append(",");
-                sb.append(expense.amount).append(",");
-                sb.append(expense.date).append(",");
-                sb.append(expense.paymentMethod).append(",");
-                sb.append(expense.description).append("\n");
+            for (ExpenseInformation exp : expenses) {
+                sb.append(exp.category).append(",");
+                sb.append(exp.merchant).append(",");
+                sb.append(exp.amount).append(",");
+                sb.append(exp.date).append(",");
+                sb.append(exp.paymentMethod).append(",");
+                sb.append(exp.description).append("\n");
+                totalAmount += exp.amount;
+
+            }
+
+            if (expenses.size() > 1) {
+                sb.append("\nTotal,,").append(totalAmount).append(",,,\n");
             }
 
             writer.write(sb.toString());
@@ -56,6 +71,7 @@ class ExpenseInformation {
         this.date = date;
         this.paymentMethod = paymentMethod;
         this.description = description;
+        
     }
 }
 
@@ -173,7 +189,7 @@ class Interface{
         for (int i = 0; i < recentTransactions.stack.size(); i++) {
             expenses.add(recentTransactions.stack.getValue(i));
         }
-        utility.exportToCSV(expenses);
+        utility.exportToCSV(expenses, recentTransactions);
     }
 
     // 4. Undo last entry
@@ -306,8 +322,9 @@ class Node { // For linked list data structure.
     ExpenseInformation Data; // Store ExpenseInformation objects
     Node next;
 
-    public Node(ExpenseInformation data) {
-        this.Data = data;
-        this.next = null;
+        public Node(ExpenseInformation data) {
+            this.Data = data;
+            this.next = null;
+        }
     }
-}
+
