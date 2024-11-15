@@ -1,3 +1,7 @@
+import java.io.File;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 class ExpenseTracker{
@@ -13,8 +17,29 @@ class Utility{ //Reserved for export, and basic algorithms.
     public Utility(){}
 
     //To be implemented - CSV file output
+    public void exportToCSV(List<ExpenseInformation> expenses) {
+        try (PrintWriter writer = new PrintWriter(new File("CC13---ExpenseTracker/ExpenseInformation.csv"))) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("Category,Merchant,Amount,Date,PaymentMethod,Description\n");
 
+            for (ExpenseInformation expense : expenses) {
+                sb.append(expense.category).append(",");
+                sb.append(expense.merchant).append(",");
+                sb.append(expense.amount).append(",");
+                sb.append(expense.date).append(",");
+                sb.append(expense.paymentMethod).append(",");
+                sb.append(expense.description).append("\n");
+            }
+
+            writer.write(sb.toString());
+            System.out.println("CSV file created successfully.");
+        } catch (Exception e) {
+            System.out.println("An error occurred while writing to the CSV file.");
+            e.printStackTrace();
+        }
+    }
 }
+
 
 class ExpenseInformation {
     String category;
@@ -76,7 +101,7 @@ class Interface{
                     break;
                 
                 case 5:
-                    //Utility.exportToCSV(expenseData);
+                    exportToCSV(recentTransactions);
                     break;
                 
                 case 6:
@@ -141,6 +166,16 @@ class Interface{
             }
         }
     }
+    // 5. Export Expenses to CSV
+    public void exportToCSV(Stack recentTransactions) {
+        Utility utility = new Utility();
+        List<ExpenseInformation> expenses = new ArrayList<>();
+        for (int i = 0; i < recentTransactions.stack.size(); i++) {
+            expenses.add(recentTransactions.stack.getValue(i));
+        }
+        utility.exportToCSV(expenses);
+    }
+
     // 4. Undo last entry
     public void undoLastAction(){
         recentTransactions.pop();
