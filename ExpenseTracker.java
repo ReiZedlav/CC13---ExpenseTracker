@@ -16,6 +16,8 @@ class ExpenseTracker{
 class Utility{ //Reserved for export, and basic algorithms.
     public Utility(){}
 
+    public static void pass(){} //Do nothing
+
     //To be implemented - CSV file output
     public void exportToCSV(List<ExpenseInformation> expenses, Stack recentTransactions) {
         double totalAmount = 0;
@@ -27,7 +29,7 @@ class Utility{ //Reserved for export, and basic algorithms.
         totalAmount += expense.amount;
     }
 
-        try (PrintWriter writer = new PrintWriter(new File("CC13---ExpenseTracker/ExpenseInformation.csv"))) {
+        try (PrintWriter writer = new PrintWriter(new File("ExpenseInformation.csv"))) {
             StringBuilder sb = new StringBuilder();
             sb.append("Category,Merchant,Amount,Date,PaymentMethod,Description\n");
 
@@ -55,7 +57,6 @@ class Utility{ //Reserved for export, and basic algorithms.
     }
 }
 
-
 class ExpenseInformation {
     String category;
     String merchant;
@@ -71,7 +72,30 @@ class ExpenseInformation {
         this.date = date;
         this.paymentMethod = paymentMethod;
         this.description = description;
-        
+    }
+
+    public void setCategory(String input){
+        category = input;
+    }
+
+    public void setMerchant(String input){
+        merchant = input;
+    }
+
+    public void setAmount(double input){
+        amount = input;
+    }
+
+    public void setDate(String input){
+        date = input;
+    }
+
+    public void setPaymentMethod(String input){
+        paymentMethod = input;
+    }
+
+    public void setDescription(String input){
+        description = input;
     }
 }
 
@@ -89,8 +113,9 @@ class Interface{
             System.out.println("2. View Expenses");
             System.out.println("3. Remove Expense");
             System.out.println("4. Undo last entry");
-            System.out.println("5. Export Expenses to CSV");
-            System.out.println("6. Exit");
+            System.out.println("5. Edit an expense");
+            System.out.println("6. Export Expenses to CSV");
+            System.out.println("7. Exit");
             System.out.println("-------------------------------");
             System.out.print("Enter option: ");
             int Command = input.nextInt();
@@ -117,13 +142,16 @@ class Interface{
                     break;
                 
                 case 5:
-                    exportToCSV(recentTransactions);
+                    editExpense(); //unfinished
                     break;
                 
                 case 6:
+                    exportToCSV(recentTransactions);
+                    break;
+                
+                case 7:
                     System.out.println("Exiting!");
                     return;
-                
                 default:
                     System.out.println("Invalid Statement");
             }
@@ -171,7 +199,7 @@ class Interface{
         System.out.println("Recent Transactions:");
         for (int i = 0; i < recentTransactions.stack.size(); i++) {
             ExpenseInformation expense = recentTransactions.stack.getValue(i);
-            System.out.println("Expense " + (i + 1) + ":");
+            System.out.println("Expense " + (i) + ":");
             System.out.println("Category: " + expense.category);
             System.out.println("Merchant: " + expense.merchant);
             System.out.println("Amount: " + expense.amount);
@@ -181,8 +209,119 @@ class Interface{
             System.out.println("-------------------------------");
             }
         }
+
+        while (true){
+            System.out.print("Type 'continue' to proceed: ");
+            String verify = input.nextLine();
+
+            if (verify.equals("continue")){
+                return;
+            }
+        }
     }
-    // 5. Export Expenses to CSV
+
+    //5.
+
+    public void editExpense(){
+        if (recentTransactions.isEmpty()) {
+            System.out.println("No recent transactions found.");
+            return;
+        } else{
+            System.out.print("Choose the transaction number to edit: ");
+            int txNumber = input.nextInt();
+
+            input.nextLine();
+
+            if (txNumber < 0 || txNumber > recentTransactions.stack.size()){
+                System.out.println("Transaction out of bounds, try again!");
+                return;
+            } 
+
+            try{
+                ExpenseInformation expense = recentTransactions.stack.getValue(txNumber);
+
+                System.out.println("-------------------------------");
+                System.out.println("EDITING STACK ENTRY: " + txNumber);
+                System.out.println("Category: " + expense.category);
+                System.out.println("Merchant: " + expense.merchant);
+                System.out.println("Amount: " + expense.amount);
+                System.out.println("Date: " + expense.date);
+                System.out.println("Payment Method: " + expense.paymentMethod);
+                System.out.println("Description: " + expense.description);
+                System.out.println("-------------------------------");
+
+                System.out.print("Leave blank if you do not wish to edit");
+
+                System.out.println();
+
+                System.out.print("Re-Enter Category: ");
+                String categoryInput = input.nextLine();
+
+                if (categoryInput.isEmpty()){
+                    Utility.pass();
+                } else{
+                    expense.setCategory(categoryInput);
+                }
+
+                System.out.print("Re-Enter Merchant: ");
+                String merchantInput = input.nextLine();
+
+                if (merchantInput.isEmpty()){
+                    Utility.pass();
+                } else{
+                    expense.setMerchant(merchantInput);
+                }
+
+                System.out.print("Re-Enter Amount: ");
+                String amountInput = input.nextLine();
+
+                if (amountInput.isEmpty()){
+                    Utility.pass();
+                } else{
+                    expense.setAmount(Double.parseDouble(amountInput));
+                }
+
+                System.out.print("Re-Enter Date: ");
+                String dateInput = input.nextLine();
+
+                if (dateInput.isEmpty()){
+                    Utility.pass();
+                } else{
+                    expense.setDate(dateInput);
+                }
+
+                System.out.print("Re-Enter Payment Method: ");
+                String paymentMethodInput = input.nextLine();
+
+                if (paymentMethodInput.isEmpty()){
+                    Utility.pass();
+                } else{
+                    expense.setPaymentMethod(paymentMethodInput);
+                }
+
+                System.out.print("Re-Enter Description: ");
+                String descriptionInput = input.nextLine();
+
+                if (descriptionInput.isEmpty()){
+                    Utility.pass();
+                } else{
+                    expense.setDescription(descriptionInput);
+                }
+                
+                System.out.println("-------------------------------");
+                System.out.println("EDIT COMPLETE");
+                System.out.println("-------------------------------");
+
+
+
+            } catch (IndexOutOfBoundsException e){
+                System.out.println("Transaction out of bounds, try again!");
+                return;
+            }
+        }
+    }
+
+    // 6. Export Expenses to CSV
     public void exportToCSV(Stack recentTransactions) {
         Utility utility = new Utility();
         List<ExpenseInformation> expenses = new ArrayList<>();
@@ -294,16 +433,6 @@ class LinkedList { // For other necessary data structures.
         }
 
         current.next = null; // Remove the last node
-    }
-
-    public void printList() { // To print all the elements in the linked list
-        Node current = head;
-        int index = 0;
-        while (current != null) {
-            System.out.println("Index " + index + ": " + current.Data);
-            current = current.next;
-            index++;
-        }
     }
 
     int size() {
