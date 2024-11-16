@@ -142,7 +142,7 @@ class Interface{
                     break;
                 
                 case 5:
-                    editExpense(); //unfinished
+                    editExpense(); 
                     break;
                 
                 case 6:
