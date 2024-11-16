@@ -134,7 +134,7 @@ class Interface{
                     break;
                 
                 case 3:
-                    //removeExpense();
+                    removeExpense();
                     break;
                 
                 case 4:
@@ -219,8 +219,32 @@ class Interface{
             }
         }
     }
+    // 3. Remove Expense
+    public void removeExpense(){
+       if (recentTransactions.isEmpty()) {
+           System.out.println("No recent transactions found.");
+           return;
+       } else{
+           System.out.print("Choose the transaction number to remove: ");
+           int txNumber = input.nextInt();
 
-    //5.
+           input.nextLine();
+
+           if (txNumber <= 0 || txNumber > recentTransactions.stack.size()){
+               System.out.println("Transaction out of bounds, try again!");
+               return;
+           } 
+
+           try{
+               recentTransactions.pop(txNumber);
+               System.out.println("Expense " + txNumber + " removed successfully!");
+           } catch (IndexOutOfBoundsException e){
+               System.out.println("Index out of bounds, try again!");
+           }
+       }
+    }
+
+    //5. Edit Expense
 
     public void editExpense(){
         if (recentTransactions.isEmpty()) {
@@ -353,6 +377,12 @@ class Stack {
     public void pop() { // Removes an ExpenseInformation object from the stack.
         stack.removeHead();
     }
+
+    void pop(int txNumber) {
+        for (int i = 0; i < txNumber; i++) {
+            stack.removeHead();
+        }
+    } 
 
     public ExpenseInformation peek() { // Gets the ExpenseInformation object at the top of the stack.
         return (ExpenseInformation) stack.getValue(0);
