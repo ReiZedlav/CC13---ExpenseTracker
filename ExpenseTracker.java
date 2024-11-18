@@ -241,7 +241,7 @@ class Interface{
            } 
 
            try{
-               recentTransactions.pop(txNumber);
+               recentTransactions.remove(txNumber);
                System.out.println("Expense " + txNumber + " removed successfully!");
            } catch (IndexOutOfBoundsException e){
                System.out.println("Transaction out of bounds, try again!");
@@ -474,6 +474,9 @@ class Stack {
     public boolean isEmpty() {
         return stack.isEmpty();
     }
+    public void remove(int index) {
+    stack.removeAt(index);
+}
 }
 
 class LinkedList { // For other necessary data structures.
@@ -557,7 +560,30 @@ class LinkedList { // For other necessary data structures.
         }
         return count;
     }
-    
+    public void removeAt(int index) {
+    if (index < 0 || isEmpty()) {
+        throw new IndexOutOfBoundsException("Index out of bounds.");
+    }
+
+    if (index == 0) { // Remove the head
+        removeHead();
+        return;
+    }
+
+    Node current = head;
+    for (int i = 0; i < index - 1; i++) {
+        if (current.next == null) {
+            throw new IndexOutOfBoundsException("Index out of bounds.");
+        }
+        current = current.next;
+    }
+
+    if (current.next == null) {
+        throw new IndexOutOfBoundsException("Index out of bounds.");
+    }
+
+    current.next = current.next.next; // Bypass the node to be removed
+}    
 }
 
 class Node { // For linked list data structure.
