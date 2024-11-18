@@ -22,12 +22,11 @@ class Utility{ //Reserved for export, and basic algorithms.
     public void exportToCSV(List<ExpenseInformation> expenses, Stack recentTransactions) {
         double totalAmount = 0;
 
-    // Get all transaction amounts and calculate total
-    for (int i = 0; i < recentTransactions.stack.size(); i++) {
-        ExpenseInformation expense = recentTransactions.stack.getValue(i);
-        expenses.add(expense);
-        totalAmount += expense.amount;
-    }
+        // Calculate total amount from recent transactions
+        for (int i = 0; i < recentTransactions.stack.size(); i++) {
+            ExpenseInformation expense = recentTransactions.stack.getValue(i);
+            totalAmount += expense.amount;
+        }
 
         try (PrintWriter writer = new PrintWriter(new File("ExpenseInformation.csv"))) {
             StringBuilder sb = new StringBuilder();
@@ -40,18 +39,12 @@ class Utility{ //Reserved for export, and basic algorithms.
                 sb.append(exp.date).append(",");
                 sb.append(exp.paymentMethod).append(",");
                 sb.append(exp.description).append("\n");
-                totalAmount += exp.amount;
-
             }
 
-            if (expenses.size() > 1) {
-                sb.append("\nTotal,,").append(totalAmount).append(",,,\n");
-            }
+            sb.append("Total,,").append(totalAmount).append("\n");
 
             writer.write(sb.toString());
-            System.out.println("CSV file created successfully.");
         } catch (Exception e) {
-            System.out.println("An error occurred while writing to the CSV file.");
             e.printStackTrace();
         }
     }
@@ -588,4 +581,3 @@ class Node { // For linked list data structure.
             this.next = null;
         }
     }
-
