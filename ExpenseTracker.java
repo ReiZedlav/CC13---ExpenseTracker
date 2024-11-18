@@ -235,7 +235,7 @@ class Interface{
 
            input.nextLine();
 
-           if (txNumber <= 0 || txNumber > recentTransactions.stack.size()){
+           if (txNumber < 0 || txNumber > recentTransactions.stack.size()){
                System.out.println("Transaction out of bounds, try again!");
                return;
            } 
@@ -462,7 +462,7 @@ class Stack {
     }
 
     void pop(int txNumber) {
-        for (int i = 0; i < txNumber; i++) {
+        for (int i = 0; i <= txNumber; i++) {
             stack.removeHead();
         }
     } 
