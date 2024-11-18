@@ -115,7 +115,8 @@ class Interface{
             System.out.println("4. Undo last entry");
             System.out.println("5. Edit an expense");
             System.out.println("6. Export Expenses to CSV");
-            System.out.println("7. Exit");
+            System.out.println("7. Search highest or lowest expense");
+            System.out.println("8. Exit");
             System.out.println("-------------------------------");
             System.out.print("Enter option: ");
             int Command = input.nextInt();
@@ -148,8 +149,12 @@ class Interface{
                 case 6:
                     exportToCSV(recentTransactions);
                     break;
-                
+
                 case 7:
+                    searchExpense();
+                    break;
+                
+                case 8:
                     System.out.println("Exiting!");
                     return;
                 default:
@@ -239,7 +244,7 @@ class Interface{
                recentTransactions.pop(txNumber);
                System.out.println("Expense " + txNumber + " removed successfully!");
            } catch (IndexOutOfBoundsException e){
-               System.out.println("Index out of bounds, try again!");
+               System.out.println("Transaction out of bounds, try again!");
            }
        }
     }
@@ -345,7 +350,7 @@ class Interface{
         }
     }
 
-    // 6. Export Expenses to CSV
+    //6.Export Expenses to CSV
     public void exportToCSV(Stack recentTransactions) {
         Utility utility = new Utility();
         List<ExpenseInformation> expenses = new ArrayList<>();
@@ -355,8 +360,86 @@ class Interface{
         utility.exportToCSV(expenses, recentTransactions);
     }
 
+    //7 Search expenses for lowest & highest. (Linear Search)
+
+    public void searchExpense(){
+        if (recentTransactions.isEmpty()) {
+            System.out.println("No recent transactions found.");
+            return;
+        }
+
+        System.out.println("-------------------------------");
+        System.out.println("Available Commands ");
+        System.out.println("0 - Lowest Expense");
+        System.out.println("1 - Highest Expense");
+        
+        double highest = Integer.MIN_VALUE;
+        double lowest = Integer.MAX_VALUE;
+
+        String verify = "continue";
+
+        int Pointer = 0;
+
+        while (true){
+
+            System.out.print("Enter Command: ");
+            String command = input.nextLine();
+
+            //canary
+            if (command.equals("0")){
+                for (int i = 0; i < recentTransactions.stack.size(); i++){
+                    if (recentTransactions.stack.getValue(i).amount < lowest){
+                        lowest = recentTransactions.stack.getValue(i).amount;
+                    }
+                }
+
+                System.out.println("Lowest Transaction: " + lowest);
+            
+                while (true){
+                    System.out.print("Type 'continue' to exit: ");
+                    String userInput = input.nextLine();
+
+                    if (userInput.equals(verify)){
+                        return;
+                    }
+                }
+
+            }
+
+            else if (command.equals("1")){
+                for (int j = 0; j < recentTransactions.stack.size(); j++){
+                    if (recentTransactions.stack.getValue(j).amount > highest){
+                        highest = recentTransactions.stack.getValue(j).amount;
+                    }
+                }
+                System.out.println("Highest Transaction: " + highest);
+                
+                while (true){
+                    System.out.print("Type 'continue' to exit: ");
+                    String userInput = input.nextLine();
+
+                    if (userInput.equals(verify)){
+                        return;
+                    }
+                }
+
+
+            } else{
+                System.out.println("Invalid Statement!");
+            }
+        
+        }
+
+    }
+
     // 4. Undo last entry
     public void undoLastAction(){
+
+        if (recentTransactions.isEmpty()) {
+            System.out.println("No recent transactions found.");
+            return;
+        }
+
         recentTransactions.pop();
         System.out.println("Last transaction removed!");
     }
