@@ -165,10 +165,18 @@ class Interface{
         System.out.print("Merchant Name: ");
         String merchantName = input.nextLine();
 
-        System.out.print("Amount Total: ");
-        double amountTotal = input.nextDouble();
-
-        input.nextLine();
+        double amountTotal = 0;
+        while (true) {
+            System.out.print("Amount Total: ");
+            try {
+                amountTotal = input.nextDouble();
+                input.nextLine();
+                break; 
+            } catch (Exception e) {
+                System.out.println("Invalid input. Please enter a valid number.");
+                input.nextLine(); 
+            }
+        }
 
         System.out.print("Date of expense (DD/MM/YYYY): ");
         String date = input.nextLine();
@@ -187,6 +195,7 @@ class Interface{
 
         System.out.println("Expense added successfully!");
     }
+
     // 2. View Expenses
     public void viewExpenses()  {
         if (recentTransactions.isEmpty()) {
@@ -217,6 +226,7 @@ class Interface{
             }
         }
     }
+
     // 3. Remove Expense
     public void removeExpense(){
        if (recentTransactions.isEmpty()) {
@@ -242,8 +252,19 @@ class Interface{
        }
     }
 
-    //5. Edit Expense
+    // 4. Undo last entry
+        public void undoLastAction(){
 
+            if (recentTransactions.isEmpty()) {
+                System.out.println("No recent transactions found.");
+                return;
+            }
+
+            recentTransactions.pop();
+            System.out.println("Last transaction removed!");
+        }
+
+    //5. Edit Expense
     public void editExpense(){
         if (recentTransactions.isEmpty()) {
             System.out.println("No recent transactions found.");
@@ -294,15 +315,33 @@ class Interface{
                     expense.setMerchant(merchantInput);
                 }
 
-                System.out.print("Re-Enter Amount: ");
-                String amountInput = input.nextLine();
-
-                if (amountInput.isEmpty()){
-                    Utility.pass();
-                } else{
-                    expense.setAmount(Double.parseDouble(amountInput));
+            System.out.print("Re-Enter Amount: ");
+            String amountInput = input.nextLine();
+                while (true) {
+                    try {
+                        if (amountInput.isEmpty()) {
+                        Utility.pass();
+                        break;
+                        }
+                        else{
+                        expense.setAmount(Double.parseDouble(amountInput));
+                        break;
+                        }
+                    }
+                        catch (NumberFormatException e) {
+                                System.out.println("Invalid input. Please enter a valid number.");
+                                
+                            }
+                            System.out.print("Re-Enter Amount: ");
+                            amountInput = input.nextLine();
+                    
+                    
+                    
+                    
+                    
+                    
                 }
-
+                
                 System.out.print("Re-Enter Date: ");
                 String dateInput = input.nextLine();
 
@@ -343,7 +382,7 @@ class Interface{
         }
     }
 
-    //6.Export Expenses to CSV
+    // 6.Export Expenses to CSV
     public void exportToCSV(Stack recentTransactions) {
         Utility utility = new Utility();
         List<ExpenseInformation> expenses = new ArrayList<>();
@@ -353,8 +392,7 @@ class Interface{
         utility.exportToCSV(expenses, recentTransactions);
     }
 
-    //7 Search expenses for lowest & highest. (Linear Search)
-
+    // 7. Search expenses for lowest & highest. (Linear Search)
     public void searchExpense(){
         if (recentTransactions.isEmpty()) {
             System.out.println("No recent transactions found.");
@@ -424,19 +462,6 @@ class Interface{
         }
 
     }
-
-    // 4. Undo last entry
-    public void undoLastAction(){
-
-        if (recentTransactions.isEmpty()) {
-            System.out.println("No recent transactions found.");
-            return;
-        }
-
-        recentTransactions.pop();
-        System.out.println("Last transaction removed!");
-    }
-
 }
 
 class Stack {
