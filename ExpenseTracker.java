@@ -1,5 +1,7 @@
 import java.io.File;
 import java.io.PrintWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -165,42 +167,53 @@ class Interface{
     
     // 1. Add Expense
    public void addExpense() {
-        System.out.print("Transaction category (Food, Transportation, Tuition, etc...): ");
-        String category = input.nextLine();
-        
-        System.out.print("Merchant Name: ");
-        String merchantName = input.nextLine();
+    System.out.print("Transaction category (Food, Transportation, Tuition, etc...): ");
+    String category = input.nextLine();
+    
+    System.out.print("Merchant Name: ");
+    String merchantName = input.nextLine();
 
-        double amountTotal = 0;
-        while (true) {
-            System.out.print("Amount Total: ");
-            try {
-                amountTotal = input.nextDouble();
-                input.nextLine();
-                break; 
-            } catch (Exception e) {
-                System.out.println("Invalid input. Please enter a valid number.");
-                input.nextLine(); 
-            }
+    double amountTotal = 0;
+    while (true) {
+        System.out.print("Amount Total: ");
+        try {
+            amountTotal = input.nextDouble();
+            input.nextLine();
+            break; 
+        } catch (Exception e) {
+            System.out.println("Invalid input. Please enter a valid number.");
+            input.nextLine(); 
         }
-
-        System.out.print("Date of expense (DD/MM/YYYY): ");
-        String date = input.nextLine();
-
-        System.out.print("Payment method (e.g., Credit Card, Cash, PayPal): ");
-        String paymentMethod = input.nextLine();
-
-        System.out.print("Short Description: ");
-        String shortDescription = input.nextLine();
-
-        System.out.println("-------------------------------");
-
-        ExpenseInformation expense = new ExpenseInformation(category,merchantName,amountTotal,date,paymentMethod,shortDescription);
-
-        recentTransactions.push(expense); //Push to stack
-
-        System.out.println("Expense added successfully!");
     }
+
+    String date = "";
+    while (true) {
+        System.out.print("Date of expense (DD/MM/YYYY): ");
+        date = input.nextLine();
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            dateFormat.setLenient(false);
+            dateFormat.parse(date);
+            break;
+        } catch (ParseException e) {
+            System.out.println("Please input a valid date.");
+        }
+    }
+
+    System.out.print("Payment method (e.g., Credit Card, Cash, PayPal): ");
+    String paymentMethod = input.nextLine();
+
+    System.out.print("Short Description: ");
+    String shortDescription = input.nextLine();
+
+    System.out.println("-------------------------------");
+
+    ExpenseInformation expense = new ExpenseInformation(category, merchantName, amountTotal, date, paymentMethod, shortDescription);
+
+    recentTransactions.push(expense); // Push to stack
+
+    System.out.println("Expense added successfully!");
+}
 
     // 2. View Expenses
     public void viewExpenses()  {
@@ -352,10 +365,20 @@ class Interface{
                 System.out.print("Re-Enter Date: ");
                 String dateInput = input.nextLine();
 
-                if (dateInput.isEmpty()){
-                    Utility.pass();
-                } else{
-                    expense.setDate(dateInput);
+                if (!dateInput.isEmpty()){
+                    while (true) { 
+                        try {
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                            dateFormat.setLenient(false);
+                            dateFormat.parse(dateInput);
+                            expense.setDate(dateInput);
+                            break;
+                        } catch (ParseException e) {
+                            System.out.println("Please input a valid date.");
+                            System.out.println("Re-Enter Date: ");
+                            dateInput = input.nextLine();
+                        }
+                    }
                 }
 
                 System.out.print("Re-Enter Payment Method: ");
