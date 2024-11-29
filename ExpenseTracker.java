@@ -112,6 +112,8 @@ class Interface{
             System.out.println("8. Exit");
             System.out.println("-------------------------------");
             System.out.print("Enter option: ");
+            
+            try {
             int Command = input.nextInt();
 
             input.nextLine();
@@ -151,7 +153,11 @@ class Interface{
                     System.out.println("Exiting!");
                     return;
                 default:
-                    System.out.println("Invalid Statement");
+                    System.out.println("Please enter a valid number.");
+            }
+            } catch (Exception e) {
+                System.out.println("Please enter a valid number.");
+                input.nextLine();
             }
         }
     }
@@ -233,21 +239,22 @@ class Interface{
            System.out.println("No recent transactions found.");
            return;
        } else{
+
            System.out.print("Choose the transaction number to remove: ");
+          
+           try {
            int txNumber = input.nextInt();
-
-           input.nextLine();
-
            if (txNumber < 0 || txNumber > recentTransactions.stack.size()){
                System.out.println("Transaction out of bounds, try again!");
                return;
            } 
-
-           try{
-               recentTransactions.stack.removeAt(txNumber);
-               System.out.println("Expense " + txNumber + " removed successfully!");
-           } catch (IndexOutOfBoundsException e){
-               System.out.println("Transaction out of bounds, try again!");
+           else {
+            recentTransactions.stack.removeAt(txNumber);
+            System.out.println("Expense " + txNumber + " removed successfully!");
+           }
+           } catch (Exception e){
+               System.out.println("Please enter a valid number.");
+               input.nextLine();
            }
        }
     }
