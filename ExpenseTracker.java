@@ -437,6 +437,19 @@ class Interface{
         double highest = Integer.MIN_VALUE;
         double lowest = Integer.MAX_VALUE;
 
+        String lowestCategory = null;
+        String lowestMerchant = null;
+        String lowestDate = null;
+        String lowestPaymentMethod = null;
+        String lowestDescription = null;
+
+        String highestCategory = null;
+        String highestMerchant = null;
+        String highestDate = null;
+        String highestPaymentMethod = null;
+        String highestDescription = null;
+
+
         String verify = "continue";
 
         int Pointer = 0;
@@ -451,10 +464,21 @@ class Interface{
                 for (int i = 0; i < recentTransactions.stack.size(); i++){
                     if (recentTransactions.stack.getValue(i).amount < lowest){
                         lowest = recentTransactions.stack.getValue(i).amount;
+                        lowestCategory = recentTransactions.stack.getValue(i).category;
+                        lowestMerchant = recentTransactions.stack.getValue(i).merchant;
+                        lowestDate = recentTransactions.stack.getValue(i).paymentMethod;
+                        lowestDescription = recentTransactions.stack.getValue(i).description;
                     }
                 }
 
+                System.out.println("-------------------------------");
                 System.out.println("Lowest Transaction: " + lowest);
+                System.out.println("Category: " + lowestCategory);
+                System.out.println("Merchant: " + lowestMerchant);
+                System.out.println("Date: " + lowestDate);
+                System.out.println("Description: " + lowestDescription);
+
+                System.out.println("-------------------------------");
             
                 while (true){
                     System.out.print("Type 'continue' to exit: ");
@@ -471,9 +495,21 @@ class Interface{
                 for (int j = 0; j < recentTransactions.stack.size(); j++){
                     if (recentTransactions.stack.getValue(j).amount > highest){
                         highest = recentTransactions.stack.getValue(j).amount;
+                        highestCategory = recentTransactions.stack.getValue(j).category;
+                        highestMerchant = recentTransactions.stack.getValue(j).merchant;
+                        highestDate = recentTransactions.stack.getValue(j).paymentMethod;
+                        highestDescription = recentTransactions.stack.getValue(j).description;
                     }
                 }
+
+                System.out.println("-------------------------------");
                 System.out.println("Highest Transaction: " + highest);
+                System.out.println("Category: " + highestCategory);
+                System.out.println("Merchant: " + highestMerchant);
+                System.out.println("Date: " + highestDate);
+                System.out.println("Description: " + highestDescription);
+
+                System.out.println("-------------------------------");
                 
                 while (true){
                     System.out.print("Type 'continue' to exit: ");
